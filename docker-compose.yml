@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  docherefrontend:
+    image: docherefrontend
+    stdin_open: true
+    ports:
+      - "5173:5173"
+    networks:
+      - doc-here
+  docherebackend:
+    image: docherebackend
+    ports:
+      - "5000:5000"
+    networks:
+      - doc-here
+    depends_on:
+      - mongo
+    # volumes:
+    #   - ./backend:/usr/src/app
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - doc-here
+    volumes:
+      - mongo-data:/data/docheredb
+networks:
+  doc-here:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local

@@ -1,0 +1,23 @@
+{
+  "name": "docherets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node TS-Backend/build/app.js",
+    "server": "nodemon TS-Backend/src/app.ts",
+    "client": "npm run dev --prefix DocHereTS-frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.0.1",
+    "nodemon": "^2.0.22"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
