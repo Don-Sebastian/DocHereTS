@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import configKeys from '../../../config';
-import { log } from 'console';
 mongoose.set('strictQuery', true);
 
 const connectDB = async () => {
