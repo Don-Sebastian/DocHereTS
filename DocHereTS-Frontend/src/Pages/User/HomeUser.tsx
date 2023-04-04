@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/Store";
+import axiosInstancePatient from "../../Instances/PatientAxiosInstance";
 
 const HomeUser: FC = () => { 
 
@@ -16,16 +17,9 @@ const HomeUser: FC = () => {
 
   const getUserData = async () => {
     try {
-      await axios
-        .post(
-          `${USER_BACKEND_PORT}/post-user-by-id`,
-          {},
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("jwtUser"),
-            },
-          }
-        )
+      await axiosInstancePatient
+        .get(
+          `${USER_BACKEND_PORT}/get-user-by-id`)
         .then((response) => {
           console.log(response);
 

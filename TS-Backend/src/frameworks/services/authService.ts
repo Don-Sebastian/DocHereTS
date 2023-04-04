@@ -17,9 +17,14 @@ export const authService = () => {
         return token;
     };
 
+    const comparePassword = (password: string, hashedPassword: string) => { 
+        return bcrypt.compare(password, hashedPassword);
+    }
+
     return {
         encryptPassword,
         generateToken,
+        comparePassword,
     }
 }
 

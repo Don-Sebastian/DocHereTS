@@ -7,9 +7,12 @@ export const userDbRepository = (repository: ReturnType<UserRepositoryMongoDB>) 
 
     const getUserByEmail = async (email: string) => await repository.getUserByEmail(email);
 
+    const addGoogleVerifiedUser = async (user: { name: string, email: string, email_verified: boolean, picture: string }) => await repository.addGoogleVerifiedUser(user);
+
     return {
         addUser,
         getUserByEmail,
+        addGoogleVerifiedUser,
     }
 }
 

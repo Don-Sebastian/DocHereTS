@@ -15,7 +15,9 @@ const authRouter = () => {
     authServiceInterface
   );
 
-  router.post("/register", controller.registerUser);
+    router.post("/register-patient", controller.registerUser);
+    router.post('/login-patient', controller.loginUser);
+    router.post('/google/patient', controller.googleLoginUser);
   
     return router;
 };

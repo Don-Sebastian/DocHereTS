@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { userRegister } from "../../application/useCases/auth/userAuth";
+import { userGoogleLogin, userLogin, userRegister } from "../../application/useCases/auth/userAuth";
 import { UserDbInterface } from "../../application/repositories/UserDbInterface";
 import { UserRepositoryMongoDB } from "../../frameworks/database/mongodb/repositories/UserRegpositoryMongoDB";
 import { AuthService } from "../../frameworks/services/authService";
@@ -18,7 +18,7 @@ const authController = (
 
   const registerUser = asyncHandler(async (req: Request, res: Response) => {
     const user: { name: string; email: string; password: string } = req.body;
-      const token = await userRegister(user, dbRepositoryUser, authServiceImpl);
+    const token = await userRegister(user, dbRepositoryUser, authServiceImpl);
             
     res
       .status(200)
@@ -29,8 +29,22 @@ const authController = (
       });
   });
     
+    const loginUser = asyncHandler(async (req: Request, res: Response) => {
+        const user: { email: string, password: string } = req.body;
+        const token = await userLogin(user, dbRepositoryUser, authServiceImpl);
+        res.json({ status: 'success', message: 'User Verified' , token});
+    })
+  
+  const googleLoginUser = asyncHandler(async (req: Request, res: Response) => {
+    const user: { name: string, email: string, email_verified: boolean, picture: string } = req.body;
+    const token = await userGoogleLogin(user, dbRepositoryUser, authServiceImpl);
+    res.json({ status: 'success', message: 'User verified with google', token });
+  })
+    
     return {
         registerUser,
+        loginUser,
+        googleLoginUser,
     }
 };
 

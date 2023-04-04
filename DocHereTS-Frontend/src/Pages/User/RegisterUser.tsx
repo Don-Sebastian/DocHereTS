@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import axios from "axios";
 import RegisterForm from "../../Components/RegisterForm";
-import { USER_BACKEND_PORT } from "../../Utils/Config/URLS";
+import { AUTH_BACKEND_PORT } from "../../Utils/Config/URLS";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -31,12 +31,12 @@ const RegisterUser: FC = () => {
         (async () => {
           dispatch(showLoading());
           await axios
-            .post(`${USER_BACKEND_PORT}/register`, formDetails, {
+            .post(`${AUTH_BACKEND_PORT}/register-patient`, formDetails, {
               withCredentials: true,
             })
             .then((response) => {
               dispatch(hideLoading());
-              if (response.data.created) {
+              if (response.data.status === 'success') {
                 toast.success(response.data.message);
                 localStorage.setItem("jwtUser", response.data.token);
                 navigate("/");
@@ -44,9 +44,9 @@ const RegisterUser: FC = () => {
                 toast.error(response.data.errors.message);
               else toast.error("Failed to create account. Please retry!");
             })
-            .catch((error) => {
+            .catch((error) => {              
               dispatch(hideLoading());
-              toast.error(error.response.data.errors.message);
+              toast.error(error.response.data.message);
             });
         })();
       } catch (error: any) {

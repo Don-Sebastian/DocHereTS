@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
-import { USER_BACKEND_PORT } from "../../Utils/Config/URLS";
+import { AUTH_BACKEND_PORT } from "../../Utils/Config/URLS";
 import { toast } from "react-hot-toast";
 import LoginForm from "../../Components/LoginForm";
 import { useDispatch } from "react-redux";
@@ -42,59 +42,51 @@ const LoginUser: FC = () => {
     setGoogleVerification(true);       
   };
 
-  const handleFormSubmission = () => {
+  const handleFormSubmission = async() => {
     try {
-      (async () => {
         dispatch(showLoading());
-        await axios
-          .post(`${USER_BACKEND_PORT}/login`, formDetails, {
+        const response = await axios
+          .post(`${AUTH_BACKEND_PORT}/login-patient`, formDetails, {
             withCredentials: true,
           })
-          .then((response) => {
-            dispatch(hideLoading());
-            if (response?.data?.loginStatus) {
+
+          dispatch(hideLoading());
+            if (response?.data?.status === 'success') {
               toast.success(response?.data?.message);
               localStorage.setItem("jwtUser", response.data.token);
               navigate("/");
-            } else if (response?.data?.errors)
-              toast.error(response?.data?.errors?.message);
-            else toast.error("Failed to create account. Please retry!");
-          })
-          .catch((error) => {
-            dispatch(hideLoading());
-            toast.error(error?.response?.data?.errors?.message);
-          });
-      })();
+            }
     } catch (error: any) {
       dispatch(hideLoading());
-      toast.error(error);
+      if (error.response.data.status === 'fail') {
+        toast.error(error.response.data.message);
+      }
     }
   }
 
   const handleGoogleVerification = async () => {
     try {
       dispatch(showLoading());
-      await axios
-        .post(`${USER_BACKEND_PORT}/google/auth`, formDetails, {
+      const response = await axios.post(
+        `${AUTH_BACKEND_PORT}/google/patient`,
+        formDetails,
+        {
           withCredentials: true,
-        })
-        .then((response) => {
-          dispatch(hideLoading());
-          if (response?.data?.loginStatus) {
-            toast.success(response?.data?.message);
-            localStorage.setItem("jwtUser", response.data.token);
-            navigate("/");
-          } else if (response?.data?.errors)
-            toast.error(response?.data?.errors?.message);
-          else toast.error("Failed to create account. Please retry!");
-        })
-        .catch((error) => {
-          dispatch(hideLoading());
-          toast.error(error?.response?.data?.errors?.message);
-        });
-    } catch (error) {
+        }
+      );
       dispatch(hideLoading());
-      console.error(error);
+      console.log(response);
+      
+      if (response?.data?.status === 'success') {
+        toast.success(response?.data?.message);
+        localStorage.setItem("jwtUser", response.data.token);
+        navigate("/");
+      }
+    } catch (error:any) {
+      dispatch(hideLoading());
+      if (error.response.data.status === 'fail') {
+        toast.error(error.response.data.message);
+      }
     }
   };
 
