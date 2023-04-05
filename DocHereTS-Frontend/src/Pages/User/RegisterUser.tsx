@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../Redux/Slices/alertsSlice";
+import { axiosInstanceAuth } from "../../Instances/axiosInstance";
 
 interface User {
   name: string;
@@ -30,13 +31,11 @@ const RegisterUser: FC = () => {
       try {
         (async () => {
           dispatch(showLoading());
-          await axios
-            .post(`${AUTH_BACKEND_PORT}/register-patient`, formDetails, {
-              withCredentials: true,
-            })
+          await axiosInstanceAuth
+            .post(`/register-patient`, formDetails)
             .then((response) => {
               dispatch(hideLoading());
-              if (response.data.status === 'success') {
+              if (response.data.status === "success") {
                 toast.success(response.data.message);
                 localStorage.setItem("jwtUser", response.data.token);
                 navigate("/");
@@ -44,7 +43,7 @@ const RegisterUser: FC = () => {
                 toast.error(response.data.errors.message);
               else toast.error("Failed to create account. Please retry!");
             })
-            .catch((error) => {              
+            .catch((error) => {
               dispatch(hideLoading());
               toast.error(error.response.data.message);
             });

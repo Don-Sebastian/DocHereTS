@@ -11,7 +11,9 @@ const userRouter = () => {
       userRepositoryMongoDB
     );
 
-    router.get('/get-user-by-id', controller.getUserById);
+  router.get('/get-user-by-id', controller.getUserById);
+  
+  return router;
 }
 
 export default userRouter;

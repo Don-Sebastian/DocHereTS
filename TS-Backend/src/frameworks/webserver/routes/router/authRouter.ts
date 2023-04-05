@@ -18,6 +18,7 @@ const authRouter = () => {
     router.post("/register-patient", controller.registerUser);
     router.post('/login-patient', controller.loginUser);
     router.post('/google/patient', controller.googleLoginUser);
+    router.post('/register-doctor', controller.registerDoctor)
   
     return router;
 };

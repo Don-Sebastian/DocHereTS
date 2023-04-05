@@ -23,12 +23,15 @@ export const userRepositoryMongoDB = () => {
             google_verified: email_verified,
     }, {
         upsert: true, runValidators: false, new: true, lean: true,
-    })
+        })
+    
+    const getUserById = async (userId: string) => await User.findById(userId);
 
     return {
         addUser,
         getUserByEmail,
         addGoogleVerifiedUser,
+        getUserById,
     }
 };
 

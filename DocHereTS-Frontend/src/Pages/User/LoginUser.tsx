@@ -6,6 +6,9 @@ import { toast } from "react-hot-toast";
 import LoginForm from "../../Components/LoginForm";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../Redux/Slices/alertsSlice";
+import axiosInstanceAuthPatient from "../../Instances/AuthPatientInstance";
+import { updateJwtToken } from "../../Redux/Slices/TokenSlice";
+import { axiosInstanceAuth } from "../../Instances/axiosInstance";
 
 interface User {
   email: string;
@@ -45,15 +48,18 @@ const LoginUser: FC = () => {
   const handleFormSubmission = async() => {
     try {
         dispatch(showLoading());
-        const response = await axios
-          .post(`${AUTH_BACKEND_PORT}/login-patient`, formDetails, {
+        const response = await axiosInstanceAuth.post(
+          `/login-patient`,
+          formDetails,
+          {
             withCredentials: true,
-          })
-
+          }
+        );
           dispatch(hideLoading());
-            if (response?.data?.status === 'success') {
+      if (response?.data?.status === 'success') {
               toast.success(response?.data?.message);
               localStorage.setItem("jwtUser", response.data.token);
+              dispatch(updateJwtToken({jwtUser: response.data.token}))
               navigate("/");
             }
     } catch (error: any) {
@@ -67,16 +73,11 @@ const LoginUser: FC = () => {
   const handleGoogleVerification = async () => {
     try {
       dispatch(showLoading());
-      const response = await axios.post(
-        `${AUTH_BACKEND_PORT}/google/patient`,
-        formDetails,
-        {
-          withCredentials: true,
-        }
+      const response = await axiosInstanceAuth.post(
+        `/google/patient`,
+        formDetails
       );
       dispatch(hideLoading());
-      console.log(response);
-      
       if (response?.data?.status === 'success') {
         toast.success(response?.data?.message);
         localStorage.setItem("jwtUser", response.data.token);

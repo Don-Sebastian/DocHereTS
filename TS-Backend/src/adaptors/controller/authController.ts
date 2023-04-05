@@ -40,11 +40,16 @@ const authController = (
     const token = await userGoogleLogin(user, dbRepositoryUser, authServiceImpl);
     res.json({ status: 'success', message: 'User verified with google', token });
   })
+
+  const registerDoctor = asyncHandler(async (req: Request, res: Response) => {
+    const doctor: { name: string; email: string; password: string } = req.body;
+  });
     
     return {
         registerUser,
         loginUser,
         googleLoginUser,
+        registerDoctor,
     }
 };
 

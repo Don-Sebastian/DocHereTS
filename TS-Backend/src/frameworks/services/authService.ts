@@ -4,7 +4,6 @@ import configKeys from '../../config';
 
 export const authService = () => {
     const encryptPassword = async (password: string) => {
-
         const salt = await bcrypt.genSaltSync(10);
         password = await bcrypt.hashSync(password, salt);
         return password;
@@ -21,10 +20,15 @@ export const authService = () => {
         return bcrypt.compare(password, hashedPassword);
     }
 
+    const verifyToken = (token: string) => {
+        return jwt.verify(token, configKeys.jwtSecret);
+    }
+
     return {
         encryptPassword,
         generateToken,
         comparePassword,
+        verifyToken,
     }
 }
 
